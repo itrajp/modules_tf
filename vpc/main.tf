@@ -25,7 +25,7 @@ resource "aws_subnet" "main-public-2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.2.0/24"
   map_public_ip_on_launch = "true"
-  availability_zone       = "us-east-1a"
+  availability_zone       = "us-east-1b"
 
   tags = {
     Name = "tf_main-public-2"
@@ -35,7 +35,7 @@ resource "aws_subnet" "main-private-1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.4.0/24"
   map_public_ip_on_launch = "false"
-  availability_zone       = "us-east-1b"
+  availability_zone       = "us-east-1a"
 
   tags = {
     Name = "tf_main-private-1"

@@ -28,7 +28,7 @@ resource "aws_db_subnet_group" "mysql-subnet" {
 
 resource "aws_db_parameter_group" "mysql-parameters" {
   name        = "mysql-parameters"
-  family      = "mysql5.6"
+  family      = "mysql5.7"
   description = "MYSQL parameter group"
  
    # name  = "max_allowed_packet"

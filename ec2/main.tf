@@ -13,11 +13,7 @@ resource "aws_instance" "example" {
   provisioner "file" {
     source = "apache.sh"
     destination = "/tmp/script.sh"
-    connection{
-      host = coalesce(self.public_ip,self.private_ip)
-      user = var.INSTANCE_USERNAME
-      private_key = file(var.PATH_TO_PRIVATE_KEY)
-    }
+   
   }
   provisioner "remote-exec" {
     inline = [
@@ -25,6 +21,12 @@ resource "aws_instance" "example" {
       "sudo sed -i -e 's/\r$//' /tmp/script.sh",
       "sudo /temp/script.sh",
     ]
+      connection{
+      host = coalesce(self.public_ip,self.private_ip)
+      user = var.INSTANCE_USERNAME
+      private_key = file(var.PATH_TO_PRIVATE_KEY)
+      agent = false
+    }
   
   }
   #user_data = file("apache.sh")

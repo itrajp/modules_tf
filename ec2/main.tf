@@ -1,39 +1,21 @@
-resource "aws_instance" "example" {
-  ami           = var.AMIS[var.AWS_REGION]
-  instance_type = var.INST
-  #vpc_id = var.vpc_id
-  # the VPC subnet
-  subnet_id = var.subnet_id
-
-  # the security group
-  vpc_security_group_ids = var.vpc_security_group_ids
-
-  # the public SSH key
-  key_name = aws_key_pair.mykeypair.key_name
-  provisioner "file" {
-    source = "apache.sh"
-    destination = "/tmp/script.sh"
-   
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x /temp/script.sh",
-      "sudo sed -i -e 's/\r$//' /tmp/script.sh",
-      "sudo /temp/script.sh",
-    ]
-      connection{
-      host = coalesce(self.public_ip,self.private_ip)
-      user = var.INSTANCE_USERNAME
-      private_key = file(var.PATH_TO_PRIVATE_KEY)
-      agent = false
-    }
-  
-  }
-  #user_data = file("apache.sh")
-		
-}
-
 resource "aws_key_pair" "mykeypair" {
   key_name   = var.mykey
   public_key = file(var.PATH_TO_PUBLIC_KEY)
-}
+  }
+resource "aws_instance" "example" {
+  ami           = var.AMIS[var.AWS_REGION]
+  instance_type = var.INST
+  subnet_id = var.subnet_id
+  vpc_security_group_ids = var.vpc_security_group_ids
+  user_data = <<EOF
+          #!/bin/bash
+          sudo yum update -y
+          sudo yum upgrade -y
+          sudo yum install httpd -y
+          sudo service httpd start
+          echo "<h1> Deployed via terraform ***Priyadarshini Itraj*** </h1>" | sudo tee /var/www/html/index.html
+  EOF
+  tags = {
+    "Name" = "rds_vpc_mod_webserver"
+  }
+  }    
